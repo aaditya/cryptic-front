@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import './App.css';
 
 import Dashboard from './components/Dashboard';
-import Splash from './views/Spash';
+import Splash from './views/Splash';
 
 function App() {
   let [logged, setLogged] = useState(false);

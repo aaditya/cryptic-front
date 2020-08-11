@@ -4,6 +4,7 @@ import axios from "axios";
 import { Input, Space, Button, notification } from 'antd';
 
 import { setAuthUser } from "../actions/authUser";
+import { config } from "../utils/baseUrl";
 
 const openNotification = (message) => {
     notification.open({
@@ -21,7 +22,7 @@ export default function Spash() {
         try {
             if (email && pass) {
                 setLoading(true);
-                let { data } = await axios.post('http://localhost:4000/api/v1/auth/login', { email, pwd: pass });
+                let { data } = await axios.post(`${config.url.API_URL}/api/v1/auth/login`, { email, pwd: pass });
                 localStorage.setItem('access_token', data.data)
                 dispatch(setAuthUser(true));
             }
