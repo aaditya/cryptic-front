@@ -4,7 +4,7 @@ import axios from "axios";
 import { Input, Space, Button, notification } from 'antd';
 
 import { setAuthUser } from "../actions/authUser";
-import { config } from "../utils/baseUrl";
+import { config } from "../utils/settings";
 
 const openNotification = (message) => {
     notification.open({

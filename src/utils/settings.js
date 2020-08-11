@@ -1,6 +1,6 @@
 const prod = {
     url: {
-        "API_URL": "http://api.cryptix.codes"
+        "API_URL": "https://cryptix-server.herokuapp.com"
     }
 };
 const dev = {
