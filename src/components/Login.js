@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, notification } from "antd";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
 
 import { setAuthUser } from "../actions/authUser";
 import { config } from "../utils/settings";
@@ -27,7 +28,7 @@ const openNotification = (message) => {
     });
 };
 
-export default function Demo() {
+function Login(props) {
     let [loadings, setLoading] = useState(false);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -54,7 +55,7 @@ export default function Demo() {
     };
 
     return (
-        <div style={{ marginTop: "35vh", overflow: "hidden" }}>
+        <div style={{ marginTop: "35vh" }}>
             <Form
                 {...layout}
                 name="basic"
@@ -70,6 +71,10 @@ export default function Demo() {
                     label="Email"
                     name="email"
                     rules={[
+                        {
+                            type: 'email',
+                            message: 'Email is not valid',
+                        },
                         {
                             required: true,
                             message: 'Email is required',
@@ -100,9 +105,9 @@ export default function Demo() {
                         Reset
                     </Button>
                 </Form.Item>
-                
+
                 <Form.Item {...tailLayout}>
-                    <Button style={{ marginRight: "8px" }} type="link" htmlType="button">
+                    <Button style={{ marginRight: "8px" }} type="link" htmlType="button" onClick={() => { props.history.push('/register') }}>
                         Register
                     </Button>
                     <Button style={{ marginRight: "8px" }} type="link" htmlType="button">
@@ -113,3 +118,5 @@ export default function Demo() {
         </div>
     );
 };
+
+export default withRouter(Login);
