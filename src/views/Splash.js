@@ -5,8 +5,11 @@ import NotFound from "../components/NotFound";
 
 import Login from "../components/Login";
 import Register from "../components/Register";
+import Activate from "../components/Activate";
 
 const { Content } = Layout;
+
+const NotFoundSplash = () => <NotFound mode="splash" />;
 
 export default function Spash() {
     return (
@@ -14,7 +17,8 @@ export default function Spash() {
             <Switch>
                 <Route exact path="/" component={Login} />
                 <Route exact path="/register" component={Register} />
-                <Route component={NotFound} />
+                <Route exact path="/activate" component={Activate} />
+                <Route component={NotFoundSplash} />
             </Switch>
         </Content>
     )

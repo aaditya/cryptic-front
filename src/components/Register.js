@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Form, Input, Checkbox, Button, notification } from 'antd';
+import { Form, Input, Checkbox, Button } from 'antd';
 import Recaptcha from "react-google-recaptcha";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 
 import { config } from "../utils/settings";
+import { openNotification } from "../components/Notification";
 
 const formItemLayout = {
     labelCol: {
@@ -35,12 +36,6 @@ const tailFormItemLayout = {
             offset: 8,
         },
     },
-};
-
-const openNotification = (message) => {
-    notification.open({
-        message
-    });
 };
 
 function RegistrationForm(props) {

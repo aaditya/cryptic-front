@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Form, Input, Button, notification } from "antd";
+import { Form, Input, Button } from "antd";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
 
 import { setAuthUser } from "../actions/authUser";
+import { openNotification } from "../components/Notification";
 import { config } from "../utils/settings";
 
 const layout = {
@@ -20,12 +21,6 @@ const tailLayout = {
         offset: 9,
         span: 6,
     },
-};
-
-const openNotification = (message) => {
-    notification.open({
-        message
-    });
 };
 
 function Login(props) {

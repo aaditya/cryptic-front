@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function NotFound() {
+export default function NotFound({ mode }) {
     return (
         <div style={{ width: "100%", textAlign: "center" }}>
             <img
@@ -10,7 +10,7 @@ export default function NotFound() {
                 src="/images/page_not_found.svg"
                 alt="Page Not Found"
             />
-            <Link to="/">Go Home</Link>
+            { mode === "splash" && <Link to="/">Go Home</Link>}
         </div>
     );
 }
