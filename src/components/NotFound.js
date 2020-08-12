@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function NotFound() {
     return (
@@ -9,6 +10,7 @@ export default function NotFound() {
                 src="/images/page_not_found.svg"
                 alt="Page Not Found"
             />
+            <Link to="/">Go Home</Link>
         </div>
     );
 }
