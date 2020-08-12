@@ -31,6 +31,7 @@ function NavBar(props) {
     const logoutUser = () => {
         localStorage.clear();
         dispatch(setAuthUser(false));
+        props.history.push('/');
     }
 
     const menu = (

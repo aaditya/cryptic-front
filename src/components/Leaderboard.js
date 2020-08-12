@@ -1,81 +1,51 @@
-import React from "react";
-import { Table, Tag, Space } from 'antd';
+import React, { useEffect, useState } from "react";
+import { Table } from 'antd';
+import { getBoard } from "../utils/getQuestion";
 
 const columns = [
     {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
+        title: 'S.No',
+        dataIndex: 'num',
+        key: 'num',
         render: text => <p>{text}</p>,
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
+        title: 'School',
+        dataIndex: 'school',
+        key: 'school',
+        render: text => <p>{text}</p>,
     },
     {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
+        title: 'Time Spent (Hours)',
+        dataIndex: 'time',
+        key: 'time',
     },
     {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: tags => (
-            <>
-                {tags.map(tag => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
-                        color = 'volcano';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </>
-        ),
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => (
-            <Space size="middle">
-                <p>Invite {record.name}</p>
-                <p>Delete</p>
-            </Space>
-        ),
-    },
-];
-
-const data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
+        title: 'Level',
+        dataIndex: 'level',
+        key: 'level',
+    }
 ];
 
 export default function Leaderboard() {
+    let [board, setBoard] = useState([]);
+
+    useEffect(() => {
+        getBoard().then(lb => {
+            let fb = lb.map((b, i) => {
+                return {
+                    ...b,
+                    key: i,
+                    num: i + 1
+                }
+            });
+            setBoard(fb);
+        });
+    }, []);
+
     return (
-        <Table columns={columns} dataSource={data} />
+        <>
+            <Table columns={columns} dataSource={board} />
+        </>
     )
 }

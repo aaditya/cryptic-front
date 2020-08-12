@@ -1,38 +1,63 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, List, Input } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
+import axios from "axios";
+
+import { config } from "../utils/settings";
+import { refreshQuestion } from "../utils/getQuestion";
+import { openNotification } from "../components/Notification";
 
 const { Search } = Input;
 
 export default function Question() {
-    const data = [
-        'Racing car sprays burning fuel into crowd.',
-        'Japanese princess to wed commoner.',
-        'Australian walks 100km after outback crash.',
-        'Man charged over missing wedding girl.',
-        'Los Angeles battles huge wildfires.',
-    ];
+    let [question, setQuestion] = useState({});
+
+    useEffect(() => {
+        refreshQuestion().then(setQuestion);
+    }, []);
+
+    const submitAnswer = async (value) => {
+        if (!value) { return false; }
+        try {
+            let options = {
+                method: 'post',
+                url: `${config.url.API_URL}/api/v1/questions/play`,
+                headers: { "x-auth-token": localStorage.getItem('access_token') },
+                data: { levelId: question.lid, qId: question.qid, answer: value }
+            }
+            let { data } = await axios(options);
+            if (data.answer) {
+                refreshQuestion().then(setQuestion);
+            } else {
+                openNotification(data.message);    
+            }
+        } catch (err) {
+            openNotification(err.response.data.message || "Please Try Again");
+        }
+    }
 
     return (
         <div>
             <Card
-                title="Level 1"
+                title={`Level ${question.level}`}
                 style={{ width: "25%", minWidth: "350px", marginBottom: 20, marginLeft: "auto", marginRight: "auto" }}
-                cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                cover={question.type === "image" && <img alt="example" src={question.img} />}
             >
+                {question.type === "text" && <p>{question.question}</p>}
                 <Search
                     placeholder="Your Answer"
                     enterButton={<RightOutlined />}
-                    onSearch={value => console.log(value)}
+                    onSearch={submitAnswer}
+                    allowClear={true}
                 />
             </Card>
 
             <List
                 header={<div style={{ textAlign: "center" }}><h1>Hints</h1></div>}
                 bordered
-                dataSource={data}
+                dataSource={question.hints}
                 renderItem={item => (
-                    <List.Item>{item}</List.Item>
+                    <List.Item><a href={item.data}>{item.name}</a></List.Item>
                 )}
             />
         </div>
