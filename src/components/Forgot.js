@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
-import { useDispatch } from "react-redux";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
 
-import { setAuthUser } from "../actions/authUser";
 import { openNotification } from "../components/Notification";
 import { config } from "../utils/settings";
 
@@ -23,23 +21,39 @@ const tailLayout = {
     },
 };
 
-function Login(props) {
-    let [loadings, setLoading] = useState(false);
+function Forgot(props) {
+    let [loadings, setLoading] = useState([false, false]);
+    let [submitted, setSubmitted] = useState(false);
+    let [email, setEmail] = useState("");
+
     const [form] = Form.useForm();
-    const dispatch = useDispatch();
 
     const onFinish = async (values) => {
         try {
-            setLoading(true);
-            let { data } = await axios.post(`${config.url.API_URL}/api/v1/auth/login`, values);
-            localStorage.setItem('access_token', data.data)
-            dispatch(setAuthUser(true));
+            setLoading([true, false]);
+            let { data } = await axios.post(`${config.url.API_URL}/api/v1/auth/forgot`, values);
+            openNotification(data.message);
+            setEmail(values.email);
+            setSubmitted(true);
         } catch (err) {
             openNotification(err.response ? err.response.data.message : "Server Error. Please Try Again");
         } finally {
-            setLoading(false);
+            setLoading([false, false]);
         }
     };
+
+    const resendEmail = async () => {
+        try {
+            setLoading([false, true]);
+            let { data } = await axios.post(`${config.url.API_URL}/api/v1/auth/resend`, { email, type: "forgot" });
+            openNotification(data.message);
+            setSubmitted(true);
+        } catch (err) {
+            openNotification(err.response ? err.response.data.message : "Server Error. Please Try Again");
+        } finally {
+            setLoading([false, false]);
+        }
+    }
 
     const onFinishFailed = err => {
         setLoading(false);
@@ -79,34 +93,21 @@ function Login(props) {
                     <Input />
                 </Form.Item>
 
-                <Form.Item
-                    label="Password"
-                    name="pwd"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Password is required',
-                        },
-                    ]}
-                >
-                    <Input.Password />
-                </Form.Item>
-
                 <Form.Item {...tailLayout}>
-                    <Button style={{ marginRight: "8px" }} type="primary" loading={loadings} htmlType="submit">
+                    <Button style={{ marginRight: "8px" }} type="primary" disabled={submitted} loading={loadings[0]} htmlType="submit">
                         Submit
                     </Button>
-                    <Button style={{ marginRight: "8px" }} htmlType="button" onClick={onReset}>
+                    <Button style={{ marginRight: "8px" }} htmlType="button" disabled={submitted} onClick={onReset}>
                         Reset
                     </Button>
+                    {submitted && <Button style={{ marginRight: "8px" }} loading={loadings[1]} htmlType="button" onClick={resendEmail}>
+                        Resend Email
+                    </Button>}
                 </Form.Item>
 
                 <Form.Item {...tailLayout}>
-                    <Button style={{ marginRight: "8px" }} type="link" htmlType="button" onClick={() => { props.history.push('/register') }}>
-                        Register
-                    </Button>
-                    <Button style={{ marginRight: "8px" }} type="link" htmlType="button" onClick={() => { props.history.push('/forgot') }}>
-                        Forgot Password
+                    <Button style={{ marginRight: "8px" }} type="link" htmlType="button" onClick={() => { props.history.push('/') }}>
+                        Back to Login
                     </Button>
                 </Form.Item>
             </Form>
@@ -114,4 +115,4 @@ function Login(props) {
     );
 };
 
-export default withRouter(Login);
+export default withRouter(Forgot);

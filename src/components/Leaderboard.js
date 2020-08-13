@@ -22,9 +22,19 @@ const columns = [
         render: text => new Date(text).toDateString()
     },
     {
-        title: 'Time Spent (Hours)',
+        title: 'Time Spent (hh:mm:ss)',
         dataIndex: 'time',
         key: 'time',
+        render: text => {
+            let tm = parseFloat(text);
+            let hours = tm / 60;
+            let fh = parseInt(hours);
+            let minutes = (hours - fh) * 60;
+            let fm = parseInt(minutes);
+            let seconds = (minutes - fm) * 60;
+            let fs = parseInt(seconds);
+            return `${fh}:${fm}:${fs}`
+        }
     },
     {
         title: 'Level',
