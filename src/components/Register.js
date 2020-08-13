@@ -169,19 +169,6 @@ function RegistrationForm(props) {
                     <Input.Password />
                 </Form.Item>
 
-                <Form.Item
-                    name="code"
-                    label="Registration Code"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Registration Code is required',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
                 <Form.Item label="Captcha">
                     <Recaptcha
                         sitekey="6Lev4b0ZAAAAAILha0w_efEKbl6wIKGYBVsoZycm"
