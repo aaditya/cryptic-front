@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Card, List, Input } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import axios from "axios";
@@ -6,15 +8,23 @@ import axios from "axios";
 import { config } from "../utils/settings";
 import { refreshQuestion } from "../utils/getQuestion";
 import { openNotification } from "../components/Notification";
+import { setAuthUser } from "../actions/authUser";
 
 const { Search } = Input;
 
-export default function Question() {
+function Question(props) {
+    const dispatch = useDispatch();
     let [question, setQuestion] = useState({});
 
     useEffect(() => {
         refreshQuestion().then(setQuestion);
     }, []);
+
+    const logoutUser = () => {
+        localStorage.clear();
+        dispatch(setAuthUser(false));
+        props.history.push('/');
+    }
 
     const submitAnswer = async (value) => {
         if (!value) { return false; }
@@ -27,7 +37,13 @@ export default function Question() {
             }
             let { data } = await axios(options);
             if (data.answer) {
-                refreshQuestion().then(setQuestion);
+                refreshQuestion().then(question => {
+                    if (question.end) { 
+                        logoutUser();
+                    } else {
+                        setQuestion(question)
+                    }
+                });
             } else {
                 openNotification(data.message);    
             }
@@ -63,3 +79,5 @@ export default function Question() {
         </div>
     )
 }
+
+export default withRouter(Question);

@@ -5,15 +5,20 @@ import { getBoard } from "../utils/getQuestion";
 const columns = [
     {
         title: 'S.No',
-        dataIndex: 'num',
-        key: 'num',
-        render: text => <p>{text}</p>,
+        dataIndex: 'key',
+        key: 'key',
+        render: text => <p>{parseInt(text, 10) + 1}</p>,
     },
     {
         title: 'School',
         dataIndex: 'school',
         key: 'school',
         render: text => <p>{text}</p>,
+    },
+    {
+        title: 'Completed On',
+        dataIndex: 'date',
+        key: 'date'
     },
     {
         title: 'Time Spent (Hours)',
@@ -32,20 +37,11 @@ export default function Leaderboard() {
 
     useEffect(() => {
         getBoard().then(lb => {
-            let fb = lb.map((b, i) => {
-                return {
-                    ...b,
-                    key: i,
-                    num: i + 1
-                }
-            });
-            setBoard(fb);
+            setBoard(lb.map((b, i) => ({ ...b, key: i })));
         });
     }, []);
 
     return (
-        <>
-            <Table columns={columns} dataSource={board} />
-        </>
+        <Table columns={columns} dataSource={board} />
     )
 }

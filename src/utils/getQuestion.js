@@ -12,6 +12,11 @@ export const refreshQuestion = async () => {
             }
         }
         let { data } = await axios(options);
+
+        if (data.end) {
+            return { end: true }
+        }
+
         return data.data;
     } catch (err) {
         return {};
