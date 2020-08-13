@@ -57,8 +57,8 @@ function NavBar(props) {
             </div>
             <Dropdown overlay={menu}>
                 <div className="flex-avatar-center">
-                    <Avatar src="https://api.adorable.io/avatars/285/tylermcginnis" style={{ marginRight: 16 }} />
-                    <span>Dummy</span>
+                    <Avatar src="https://api.adorable.io/avatars/210/cryptix" style={{ marginRight: 16 }} />
+                    <span>Player</span>
                 </div>
             </Dropdown>
         </>

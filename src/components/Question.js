@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Card, List, Input } from 'antd';
+import { Card, List, Input, Empty } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import axios from "axios";
 
@@ -50,6 +50,10 @@ function Question(props) {
         } catch (err) {
             openNotification(err.response.data.message || "Please Try Again");
         }
+    }
+
+    if (!question.level) {
+        return <Empty />
     }
 
     return (

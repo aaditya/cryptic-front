@@ -18,7 +18,8 @@ const columns = [
     {
         title: 'Completed On',
         dataIndex: 'date',
-        key: 'date'
+        key: 'date',
+        render: text => new Date(text).toDateString()
     },
     {
         title: 'Time Spent (Hours)',
