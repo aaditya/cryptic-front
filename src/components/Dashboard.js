@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Layout } from "antd";
 import { Switch, Route } from "react-router-dom";
 
@@ -7,9 +8,18 @@ import Question from "./Question";
 import NotFound from "./NotFound";
 import Leaderboard from "./Leaderboard";
 
+import { refreshBoard, refreshQuestion } from "../utils/question";
+
 const { Header, Content } = Layout;
 
 export default function Dashboard() {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        refreshQuestion().then(dispatch);
+        refreshBoard().then(dispatch);
+    }, [dispatch]);
+
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Header className="header-styling">

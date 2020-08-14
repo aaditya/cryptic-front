@@ -1,59 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { Card, List, Input, Empty } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
-import axios from "axios";
 
-import { config } from "../utils/settings";
-import { refreshQuestion } from "../utils/getQuestion";
-import { openNotification } from "../components/Notification";
-import { setAuthUser } from "../actions/authUser";
+import { refreshQuestion, answerQuestion } from "../utils/question";
 
 const { Search } = Input;
 
-function Question(props) {
+export default function Question() {
     const dispatch = useDispatch();
+    const source = useSelector(state => state.question);
     let [question, setQuestion] = useState({});
 
     useEffect(() => {
-        refreshQuestion().then(setQuestion);
-    }, []);
-
-    const logoutUser = () => {
-        localStorage.clear();
-        dispatch(setAuthUser(false));
-        props.history.push('/');
-    }
+        if (source) {
+            setQuestion(source);
+        }
+    }, [source]);
 
     const submitAnswer = async (value) => {
         if (!value) { return false; }
-        try {
-            let options = {
-                method: 'post',
-                url: `${config.url.API_URL}/api/v1/questions/play`,
-                headers: { "x-auth-token": localStorage.getItem('access_token') },
-                data: { levelId: question.lid, qId: question.qid, answer: value }
-            }
-            let { data } = await axios(options);
-            if (data.answer) {
-                refreshQuestion().then(question => {
-                    if (question.end) { 
-                        logoutUser();
-                    } else {
-                        setQuestion(question)
-                    }
-                });
-            } else {
-                openNotification(data.message);    
-            }
-        } catch (err) {
-            openNotification(err.response.data.message || "Please Try Again");
-        }
+        await answerQuestion(question.lid, question.qid, value);
+        refreshQuestion().then(dispatch);
     }
 
     if (!question.level) {
-        return <Empty />
+        return <Empty description="No more questions to show" />
     }
 
     return (
@@ -68,7 +40,6 @@ function Question(props) {
                     placeholder="Your Answer"
                     enterButton={<RightOutlined />}
                     onSearch={submitAnswer}
-                    allowClear={true}
                 />
             </Card>
 
@@ -83,5 +54,3 @@ function Question(props) {
         </div>
     )
 }
-
-export default withRouter(Question);
