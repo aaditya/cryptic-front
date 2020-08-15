@@ -33,7 +33,7 @@ export default function Question() {
             <Card
                 title={`Level ${question.level}`}
                 style={{ width: "25%", minWidth: "350px", marginBottom: 20, marginLeft: "auto", marginRight: "auto" }}
-                cover={question.type === "image" && <img alt="example" src={question.img} />}
+                cover={question.type === "image" && <img alt="example" src={question.text} />}
             >
                 {question.type === "text" && <p>{question.question}</p>}
                 <Search
