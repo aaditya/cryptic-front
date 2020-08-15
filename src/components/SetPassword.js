@@ -55,6 +55,7 @@ function SetPassword(props) {
                 name="register"
                 onFinish={onFinish}
                 scrollToFirstError
+                hideRequiredMark={true}
             >
 
                 <Form.Item

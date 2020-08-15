@@ -60,6 +60,7 @@ function Login(props) {
                 form={form}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
+                hideRequiredMark={true}
                 style={{ height: "30vh" }}
             >
                 <Form.Item

@@ -87,6 +87,7 @@ function RegistrationForm(props) {
                 name="register"
                 onFinish={onFinish}
                 scrollToFirstError
+                hideRequiredMark={true}
             >
                 <Form.Item
                     name="name"
