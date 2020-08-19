@@ -54,6 +54,6 @@ export default function Leaderboard() {
     }, [source]);
 
     return (
-        <Table columns={columns} dataSource={board} pagination={{ defaultPageSize: 7, position: ['bottomCenter'] }} />
+        <Table columns={columns} dataSource={board} />
     )
 }

@@ -3,6 +3,7 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import Recaptcha from "react-google-recaptcha";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
+import qs from "query-string";
 
 import { config } from "../utils/settings";
 import { openNotification } from "../components/Notification";
@@ -45,9 +46,11 @@ function RegistrationForm(props) {
     let [email, setEmail] = useState("");
     const [form] = Form.useForm();
 
+    const { key, email: ec } = qs.parse(props.location.search);
+
     const onFinish = async (values) => {
         if (captchaKey) {
-            Object.assign(values, { captchaKey });
+            Object.assign(values, { captchaKey, code: key });
             try {
                 setLoading([true, false]);
                 let { data } = await axios.post(`${config.url.API_URL}/api/v1/auth/register`, values);
@@ -105,6 +108,7 @@ function RegistrationForm(props) {
                 <Form.Item
                     name="email"
                     label="E-mail"
+                    initialValue={ec}
                     rules={[
                         {
                             type: 'email',
