@@ -48,7 +48,7 @@ export default function Question() {
                 bordered
                 dataSource={question.hints}
                 renderItem={item => (
-                    <List.Item><a href={item.data}>{item.name}</a></List.Item>
+                <List.Item>{item.data ? <a href={item.data}>{item.name}</a> : <p>{item.name}</p>}</List.Item>
                 )}
             />
         </div>
