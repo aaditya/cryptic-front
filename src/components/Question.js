@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Card, List, Input, Empty } from 'antd';
+import { Card, List, Input, Empty, Form, Button } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 
 import { refreshQuestion, answerQuestion } from "../utils/question";
-
-const { Search } = Input;
 
 export default function Question() {
     const dispatch = useDispatch();
     const source = useSelector(state => state.question);
     let [question, setQuestion] = useState({});
+    let [answerRes, setAnswer] = useState('Answer cannot be empty');
+    const [form] = Form.useForm();
 
     useEffect(() => {
         if (source) {
@@ -19,9 +19,15 @@ export default function Question() {
     }, [source]);
 
     const submitAnswer = async (value) => {
-        if (!value) { return false; }
-        await answerQuestion(question.lid, question.qid, value);
-        refreshQuestion().then(dispatch);
+        form.resetFields();
+        let answer = await answerQuestion(question.lid, question.qid, value.answer);
+        if (!answer) {
+            setAnswer("This ain't it, Chief !");
+            form.validateFields(['answer'])
+        } else {
+            refreshQuestion().then(dispatch);
+        }
+        setAnswer('Answer cannot be empty');
     }
 
     if (!question.level) {
@@ -36,11 +42,27 @@ export default function Question() {
                 cover={question.type === "image" && <img alt="question" src={question.question} />}
             >
                 {question.type === "text" && <p>{question.question}</p>}
-                <Search
-                    placeholder="Your Answer"
-                    enterButton={<RightOutlined />}
-                    onSearch={submitAnswer}
-                />
+                <Form form={form} name="horizontal_login" layout="inline" onFinish={submitAnswer}>
+                    <Form.Item
+                        name="answer"
+                        rules={[{ required: true, message: answerRes }]}
+                    >
+                        <Input placeholder="Your Answer" />
+                    </Form.Item>
+                    <Form.Item shouldUpdate={true}>
+                        {() => (
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                disabled={
+                                    !form.isFieldsTouched(true) ||
+                                    form.getFieldsError().filter(({ errors }) => errors.length).length
+                                }
+                                icon={<RightOutlined />}
+                            />
+                        )}
+                    </Form.Item>
+                </Form>
             </Card>
 
             <List
@@ -48,7 +70,7 @@ export default function Question() {
                 bordered
                 dataSource={question.hints}
                 renderItem={item => (
-                <List.Item>{item.data ? <a href={item.data}>{item.name}</a> : item.name}</List.Item>
+                    <List.Item>{item.data ? <a href={item.data}>{item.name}</a> : item.name}</List.Item>
                 )}
             />
         </div>
