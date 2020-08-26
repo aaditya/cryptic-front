@@ -22,7 +22,7 @@ export default function Question() {
         form.resetFields();
         let answer = await answerQuestion(question.lid, question.qid, value.answer);
         if (!answer) {
-            setAnswer("This ain't it, Chief !");
+            setAnswer("Nope. Try Again !");
             form.validateFields(['answer'])
         } else {
             refreshQuestion().then(dispatch);
@@ -65,14 +65,14 @@ export default function Question() {
                 </Form>
             </Card>
 
-            <List
+            {question.hints.length > 0 && <List
                 header={<div style={{ textAlign: "center" }}><h1>Hints</h1></div>}
                 bordered
                 dataSource={question.hints}
                 renderItem={item => (
                     <List.Item>{item.data ? <a href={item.data}>{item.name}</a> : item.name}</List.Item>
                 )}
-            />
+            />}
         </div>
     )
 }

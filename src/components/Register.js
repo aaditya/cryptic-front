@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Form, Input, Checkbox, Button } from 'antd';
+import { Form, Input, Button } from 'antd';
 import Recaptcha from "react-google-recaptcha";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import qs from "query-string";
 
 import { config } from "../utils/settings";
 import { openNotification } from "../components/Notification";
@@ -46,11 +45,9 @@ function RegistrationForm(props) {
     let [email, setEmail] = useState("");
     const [form] = Form.useForm();
 
-    const { key, email: ec } = qs.parse(props.location.search);
-
     const onFinish = async (values) => {
         if (captchaKey) {
-            Object.assign(values, { captchaKey, code: key });
+            Object.assign(values, { captchaKey });
             try {
                 setLoading([true, false]);
                 let { data } = await axios.post(`${config.url.API_URL}/api/v1/auth/register`, values);
@@ -108,7 +105,6 @@ function RegistrationForm(props) {
                 <Form.Item
                     name="email"
                     label="E-mail"
-                    initialValue={ec}
                     rules={[
                         {
                             type: 'email',
@@ -180,22 +176,6 @@ function RegistrationForm(props) {
                         onChange={setCaptchaKey}
                     />
                 </Form.Item>
-
-                <Form.Item
-                    name="agreement"
-                    valuePropName="checked"
-                    rules={[
-                        {
-                            validator: (_, value) =>
-                                value ? Promise.resolve() : Promise.reject('Should accept agreement'),
-                        },
-                    ]}
-                    {...tailFormItemLayout}
-                >
-                    <Checkbox>
-                        I have read the rules of the competition and accept them.
-                    </Checkbox>
-                </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
                     <Button style={{ marginRight: "8px" }} type="primary" disabled={submitted} htmlType="submit" loading={loading[0]}>
                         Register
@@ -211,6 +191,11 @@ function RegistrationForm(props) {
                     <Button style={{ marginRight: "8px" }} type="link" htmlType="button" onClick={() => { props.history.push('/') }}>
                         Back to Login
                     </Button>
+                </Form.Item>
+                <Form.Item {...tailFormItemLayout}>
+                    <span>
+                        By clicking on register, you accept the rules of the competition.
+                    </span>
                 </Form.Item>
             </Form>
         </div>
