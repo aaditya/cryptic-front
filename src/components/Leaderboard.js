@@ -29,6 +29,7 @@ export default function Leaderboard() {
             title: 'Level',
             dataIndex: 'level',
             key: 'level',
+            render: text => <p>{parseInt(text, 10) + 1}</p>,
         }
     ];
 
