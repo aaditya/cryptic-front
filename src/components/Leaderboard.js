@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 
 export default function Leaderboard() {
     let source = useSelector(state => state.board);
@@ -17,7 +17,7 @@ export default function Leaderboard() {
             title: 'School',
             dataIndex: 'school',
             key: 'school',
-            render: text => <p>{text}</p>,
+            render: (text, record) => <><p>{text}</p>{record.self && <Tag color='volcano' key='self'>You</Tag>}</>,
         },
         {
             title: 'Completed On',
