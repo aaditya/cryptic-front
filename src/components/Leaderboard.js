@@ -20,13 +20,13 @@ export default function Leaderboard() {
             render: (text, record) => <><p>{text}</p>{record.self && <Tag color='volcano' key='self'>You</Tag>}</>,
         },
         {
-            title: 'Completed On',
+            title: 'Previous Level Completed On',
             dataIndex: 'date',
             key: 'date',
             render: text => new Date(text).toString()
         },
         {
-            title: 'Level',
+            title: 'Current Level',
             dataIndex: 'level',
             key: 'level',
             render: text => <p>{parseInt(text, 10) + 1}</p>,
